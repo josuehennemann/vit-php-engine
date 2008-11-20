@@ -112,14 +112,21 @@ class TableViewer {
 		}
 		?><tr><?
 			foreach($elements as $fld) {
-				$this->visualizeField($fieldNumber++, $fld);
+				$this->visualizeField($fieldNumber++, $elements);
 			}
 		?></tr><?
 	}
 	
 	/** Visualizes single field. */
-	function visualizeField($fieldNumber, $field) {
-		?><td><?=empty($field) ? "&nbsp;" : $field?></td><?
+	function visualizeField($fieldNumber, $fields) {
+		if ( null != $this->labelProvider ) {
+			//get specific representation of the field
+			$disp = $this->labelProvider->getColumnText($fields, $fieldNumber);
+		} else {
+			$values = array_values($fields);
+			$disp = $values[$fieldNumber];
+		}
+		?><td><?=empty($disp) ? "&nbsp;" : $disp?></td><?
 	}
 	
 	/** Visualizes table footer. */
