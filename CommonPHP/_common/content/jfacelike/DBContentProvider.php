@@ -9,7 +9,7 @@ class DBContentProvider extends IStructuredContentProvider {
 	
 	/** Constructs new content provider that forwards input (SQL queries) to specified database. 
 	 * @param dbConn database connection to use. */
-	function DBTableVisualizer(&$dbConn) {
+	function DBContentProvider(&$dbConn) {
 		$this->dbConn = $dbConn;
 //		$this->filters = array();
 //		$this->sorters = array();
@@ -20,7 +20,6 @@ class DBContentProvider extends IStructuredContentProvider {
      * @return array of rows. */
 	function getElements($input) {
 		$rs = $this->dbConn->query($input);
-		
 		$toRet = array();
 		
 		$index = 0;
@@ -28,6 +27,8 @@ class DBContentProvider extends IStructuredContentProvider {
 //			$this->visualizeRow($index++, $rs);
 			$toRet[$index++] = $rs->getCurrentRow(); 
 		}
+		
+		return $toRet;
 	}
 }
 ?>
