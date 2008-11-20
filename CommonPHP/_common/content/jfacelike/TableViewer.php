@@ -65,7 +65,7 @@ class TableViewer {
 		$this->visualizeTableHeader($elements);
 		
 		$this->visualizeControlElements($elements);
-		
+
 		$index = 0;
 		foreach($elements as $elem) {
 			$this->visualizeRow($index++, $elem);
@@ -111,7 +111,7 @@ class TableViewer {
 			?></tr><?
 		}
 		?><tr><?
-			while( FALSE !== ($fld = $rs->nextField()) ) {
+			foreach($elements as $fld) {
 				$this->visualizeField($fieldNumber++, $fld);
 			}
 		?></tr><?
