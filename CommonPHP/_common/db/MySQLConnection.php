@@ -10,7 +10,10 @@ class MySQLConnection extends DBConnection {
 	/** MySQL connection link identifier. */
 	var $lnkId;
 	var $lastInsertId;
-
+	
+	/** Fetch mode to use by default. */
+	var $fetchMode = MYSQL_BOTH;
+	
 	function MySQLConnection($server, $username, $password, $dbName, $connectionCharset="latin1") {
 		parent::DBConnection($server, $username, $password, $dbName);
 		$this->lnkId = mysql_connect($this->server, $this->username, $this->password)
@@ -26,6 +29,10 @@ class MySQLConnection extends DBConnection {
 //		register_shutdown_function(array(&$this, "destroy"));
 	}
 
+	function setFetchMode($fm) {
+		$this->fetchMode = $fm;
+	}
+	
 	/** @param q mysql query
 	*	@param doNotDie specifies whether to die on errors. */
 	function query($q, $doNotDie = false) {
@@ -49,7 +56,7 @@ class MySQLConnection extends DBConnection {
 		if (TRUE === $queryResult) {	//successfully queried, but no result returned (e.g. for "INSERT", "CREATE ..." statement)
 			return TRUE;
 		} else {	//returning result
-			$toRet = new ResultSet($queryResult);
+			$toRet = new ResultSet($queryResult, $this->fetchMode);
 			return $toRet;
 		}
 

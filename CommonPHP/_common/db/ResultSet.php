@@ -9,8 +9,11 @@ class ResultSet {
 	var $currentRow;
 	var $currentFieldIndex;
 
-	function ResultSet($resultId) {
+	var $fetchMode;
+	
+	function ResultSet($resultId, $fetchMode = MYSQL_BOTH) {
 		$this->resId = $resultId;
+		$this->fetchMode = $fetchMode;
 		$this->rowsNum = mysql_num_rows($this->resId);
 		$this->fieldsNum = mysql_num_fields($this->resId);
 	}
@@ -33,7 +36,7 @@ class ResultSet {
 	*	</code>
 	*	@return <code>FALSE</code> if no more rows available. */
 	function nextRow() {
-		$this->currentRow = mysql_fetch_array($this->resId, MYSQL_BOTH);
+		$this->currentRow = mysql_fetch_array($this->resId, $this->fetchMode);
 		if ($this->currentRow === FALSE) {
 			return FALSE;
 		}
