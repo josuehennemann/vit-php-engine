@@ -4,7 +4,8 @@
 	@version $Revision: 1.1 $ $Date: 2006/03/10 13:30:12 $*/
 class UploadHandler {
 	var $upl;
-
+	var $cachedContents = NULL;
+	
 	function UploadHandler() {
 		$upl = null;
 	}
@@ -15,8 +16,11 @@ class UploadHandler {
 		$this->upl = $_FILES[$name];
 
 		if ( NULL == $this->upl ) {
-			die("file $name is null or not defined in FILES variable");
+			die("file $name is null or not defined in _FILES variable");
 		}
+		
+		//invalidate cached contents
+		$this->cachedContents = NULL;
 		
 		//Check for possible upload errors
 		if ( !is_uploaded_file($this->getUploadedTmpName()) ) {
@@ -91,7 +95,18 @@ class UploadHandler {
 		return $this->upl['tmp_name'];
 	}
 
-
+	function getUploadedFileContents() {
+		if (NULL === $this->cachedContents) {
+			$fp      = fopen($this->getUploadedTmpName(), 'r');
+			$content = fread($fp, filesize($this->getUploadedTmpName()));
+			if ( FALSE === $content ) {
+				echo("Error reading content");
+				return NULL;
+			}
+			fclose($fp);
+		}
+		return $content;
+	}
 /*virtual protected*/
 	/** This method determines (based on original file name) whether file 
 	*	should be accepted. This may, for instance, include extension filters
